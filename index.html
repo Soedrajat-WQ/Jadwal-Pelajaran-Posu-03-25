@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Pelajaran SD Negeri Podosugih 03</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Umum & Reset */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff; /* Warna dasar latar belakang */
+            color: #333;
+        }
+
+        /* Latar Belakang Menarik (Hero Section) */
+        .hero-section {
+            background: url('image_fe5632.jpg') no-repeat center center/cover; /* Menggunakan gambar yang diunggah */
+            position: relative;
+            height: 450px; /* Tinggi hero section */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Overlay warna agar teks lebih terbaca */
+            background: rgba(70, 130, 180, 0.75); /* Biru baja transparan */
+        }
+
+        .hero-content {
+            z-index: 1;
+            /* Memberikan sedikit efek latar belakang pada teks untuk kontras */
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 20px 30px;
+            border-radius: 10px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5); /* Shadow lebih kuat */
+        }
+
+        .hero-content p {
+            font-size: 1.3em;
+            opacity: 0.95;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+        }
+
+        /* Tombol Pilihan Kelas */
+        .class-selection {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            padding: 50px 20px;
+            background-color: #e0f2f7; /* Warna latar belakang bagian tombol */
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .class-button {
+            background-color: #4CAF50; /* Warna default */
+            color: white;
+            padding: 18px 35px;
+            border-radius: 12px;
+            font-size: 1.7em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border: none;
+            display: flex;
+            flex-direction: column; /* Untuk menempatkan wali kelas di bawah */
+            align-items: center;
+            gap: 8px; /* Jarak antara teks kelas dan wali kelas */
+            flex-grow: 1; /* Agar tombol bisa mengisi ruang */
+            max-width: 250px; /* Batasi lebar maksimal tombol */
+            justify-content: center;
+            text-align: center;
+        }
+
+        .class-button:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.25);
+        }
+
+        .class-button span.class-name {
+            font-size: 1.2em; /* Ukuran teks 'Kelas X' */
+            margin-bottom: 5px; /* Jarak dengan wali kelas */
+        }
+
+        .class-button span.wali-kelas {
+            font-size: 0.7em; /* Ukuran teks wali kelas lebih kecil */
+            font-weight: 400;
+            opacity: 0.8;
+        }
+
+        .class-button img {
+            width: 35px; /* Ukuran ikon */
+            height: 35px;
+            border-radius: 50%; /* Membuat ikon bulat */
+            background-color: rgba(255,255,255,0.3);
+            padding: 3px;
+        }
+
+        /* Contoh Warna untuk Setiap Kelas (bisa disesuaikan) */
+        .class-button.kelas-1 { background: linear-gradient(to right, #FF6347, #FF7F50); } /* Tomat - Coral */
+        .class-button.kelas-2 { background: linear-gradient(to right, #FFD700, #FFC125); color: #333; } /* Emas - Kuning Cerah */
+        .class-button.kelas-3 { background: linear-gradient(to right, #1E90FF, #4682B4); } /* Biru Dodger - Biru Baja */
+        .class-button.kelas-4 { background: linear-gradient(to right, #32CD32, #6B8E23); } /* Hijau Lime - Hijau Zaitun */
+        .class-button.kelas-5 { background: linear-gradient(to right, #9932CC, #BA55D3); } /* Ungu Gelap - Ungu Medium */
+        .class-button.kelas-6 { background: linear-gradient(to right, #FF8C00, #FFA500); } /* Oranye Gelap - Oranye */
+
+        /* Bagian Tampilan Jadwal */
+        .schedule-display {
+            padding: 40px 20px;
+            max-width: 1100px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: none; /* Sembunyikan secara default */
+        }
+
+        .schedule-display h2 {
+            font-family: 'Poppins', sans-serif;
+            color: #2E8B57; /* Hijau Laut */
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            border-bottom: 2px solid #2E8B57;
+            padding-bottom: 10px;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: separate; /* Menggunakan separate untuk border-radius */
+            border-spacing: 0; /* Menghilangkan spasi antar sel */
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden; /* Penting untuk border-radius di tabel */
+        }
+
+        .schedule-table th, .schedule-table td {
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            text-align: left;
+            font-size: 1.1em;
+        }
+
+        .schedule-table th {
+            background-color: #f5f5f5;
+            font-weight: 700;
+            color: #444;
+            text-transform: uppercase;
+        }
+
+        .schedule-table tr:nth-child(even) {
+            background-color: #fefefe;
+        }
+
+        .schedule-table tr:hover {
+            background-color: #e6f7ff; /* Warna hover */
+        }
+
+        .print-button {
+            display: block;
+            margin: 30px auto 0 auto;
+            padding: 12px 25px;
+            background-color: #007bff; /* Biru */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .print-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2c3e50; /* Biru gelap */
+            color: white;
+            text-align: center;
+            padding: 25px;
+            font-size: 1em;
+            margin-top: 40px;
+        }
+
+        /* Media Queries untuk Responsif */
+        @media (max-width: 992px) {
+            .hero-content h1 {
+                font-size: 3em;
+            }
+            .class-button {
+                font-size: 1.5em;
+                padding: 15px 30px;
+                max-width: 200px;
+            }
+            .schedule-table th, .schedule-table td {
+                padding: 12px;
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5em;
+            }
+            .hero-content p {
+                font-size: 1.1em;
+            }
+            .class-button {
+                width: calc(50% - 20px); /* 2 kolom di mobile */
+                max-width: none;
+            }
+            .schedule-display {
+                margin: 30px 15px;
+                padding: 25px 15px;
+            }
+            .schedule-display h2 {
+                font-size: 2em;
+            }
+            .schedule-table th, .schedule-table td {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            /* Make table scrollable on small screens */
+            .schedule-table-container {
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2em;
+            }
+            .class-button {
+                width: 100%; /* 1 kolom di mobile sangat kecil */
+            }
+            .schedule-table {
+                font-size: 0.8em;
+            }
+            .schedule-table th, .schedule-table td {
+                padding: 8px;
+            }
+            .class-button span.class-name {
+                font-size: 1em;
+            }
+            .class-button span.wali-kelas {
+                font-size: 0.6em;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .schedule-display, .schedule-display * {
+                visibility: visible;
+            }
+            .schedule-display {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                border-radius: 0;
+                background-color: white; /* Pastikan latar belakang putih saat cetak */
+            }
+            .print-button {
+                display: none; /* Sembunyikan tombol print saat mencetak */
+            }
+            @page {
+                size: 21cm 33cm; /* Ukuran kertas F4 (Folio) */
+                margin: 1.5cm; /* Margin halaman cetak */
+            }
+            .schedule-table th, .schedule-table td {
+                border-color: #888; /* Border lebih jelas saat dicetak */
+                padding: 10px; /* Ukuran padding saat dicetak */
+                font-size: 11pt; /* Ukuran font saat dicetak */
+            }
+            .schedule-display h2 {
+                font-size: 18pt;
+                margin-bottom: 15px;
+                border-bottom: 1px solid #ccc;
+            }
+            /* Agar wali kelas tidak terlalu besar saat dicetak */
+            .schedule-display p {
+                font-size: 10pt;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>Jadwal Pelajaran SD Negeri Podosugih 03</h1>
+                <p>Tahun Pelajaran 2025/2026</p>
+                <p>Berdasarkan Permendikdasmen No 13 Tahun 2025</p>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="class-selection">
+            <button class="class-button kelas-1" data-kelas="1">
+                <img src="https://via.placeholder.com/40/FF6347/FFFFFF?text=1" alt="Kelas 1 Icon">
+                <span class="class-name">Kelas 1</span>
+                <span class="wali-kelas">Wali Kelas: Purnama Dewi S.Pd</span>
+            </button>
+            <button class="class-button kelas-2" data-kelas="2">
+                <img src="https://via.placeholder.com/40/FFD700/333333?text=2" alt="Kelas 2 Icon">
+                <span class="class-name">Kelas 2</span>
+                <span class="wali-kelas">Wali Kelas: Fatimah S.Pd</span>
+            </button>
+            <button class="class-button kelas-3" data-kelas="3">
+                <img src="https://via.placeholder.com/40/1E90FF/FFFFFF?text=3" alt="Kelas 3 Icon">
+                <span class="class-name">Kelas 3</span>
+                <span class="wali-kelas">Wali Kelas: DIYAH ANGGRAINI RATNA SARI S.Pd</span>
+            </button>
+            <button class="class-button kelas-4" data-kelas="4">
+                <img src="https://via.placeholder.com/40/32CD32/FFFFFF?text=4" alt="Kelas 4 Icon">
+                <span class="class-name">Kelas 4</span>
+                <span class="wali-kelas">Wali Kelas: SITI AISYAH S.Pd.</span>
+            </button>
+            <button class="class-button kelas-5" data-kelas="5">
+                <img src="https://via.placeholder.com/40/9932CC/FFFFFF?text=5" alt="Kelas 5 Icon">
+                <span class="class-name">Kelas 5</span>
+                <span class="wali-kelas">Wali Kelas: Rinda Rahmayanti S.Pd</span>
+            </button>
+            <button class="class-button kelas-6" data-kelas="6">
+                <img src="https://via.placeholder.com/40/FF8C00/FFFFFF?text=6" alt="Kelas 6 Icon">
+                <span class="class-name">Kelas 6</span>
+                <span class="wali-kelas">Wali Kelas: Ani Sifiyanti K, S.Pd.SD</span>
+            </button>
+        </section>
+
+        <section class="schedule-display" id="scheduleDisplay">
+            <h2 id="scheduleTitle"></h2>
+            <p id="waliKelasInfo" style="text-align: center; margin-top: -20px; margin-bottom: 20px; font-style: italic; color: #555;"></p>
+            <div id="scheduleTableContainer" class="schedule-table-container">
+                </div>
+            <button class="print-button" id="printButton">Cetak Jadwal (F4)</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 SD Negeri Podosugih 03. Jl. Contoh No. 123, Podosugih, Kecamatan, Kota. Telp: (0271) 123456</p>
+    </footer>
+
+    <script>
+        // Data Jadwal (SUDAH DIUPDATE SESUAI DATA YANG ANDA BERIKAN)
+        const schedules = {
+            '1': {
+                waliKelas: "Purnama Dewi S.Pd",
+                data: [
+                    { hari: "Senin", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Senin", jam: "07.15 - 07.50", mapel: "Upacara", guru: "-" },
+                    { hari: "Senin", jam: "07.50 - 08.25", mapel: "B.Indonesia", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Senin", jam: "08.25 - 09.00", mapel: "B.Indonesia", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Senin", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "09.10 - 09.45", mapel: "B.Indonesia", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Senin", jam: "09.45 - 10.20", mapel: "Pend. Pancasila", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Senin", jam: "10.20 - 10.55", mapel: "Pend. Pancasila", guru: "Purnama Dewi S.Pd" },
+
+                    { hari: "Selasa", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Selasa", jam: "07.15 - 07.50", mapel: "Matematika", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Selasa", jam: "07.50 - 08.25", mapel: "Matematika", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Selasa", jam: "08.25 - 09.00", mapel: "B.Indonesia", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Selasa", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "09.10 - 09.45", mapel: "B.Indonesia", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Selasa", jam: "09.45 - 10.20", mapel: "SBdP", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Selasa", jam: "10.20 - 10.55", mapel: "SBdP", guru: "Purnama Dewi S.Pd" },
+
+                    { hari: "Rabu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Rabu", jam: "07.15 - 07.50", mapel: "B.Indonesia", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Rabu", jam: "07.50 - 08.25", mapel: "B.Indonesia", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Rabu", jam: "08.25 - 09.00", mapel: "B.Indonesia", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Rabu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "09.10 - 09.45", mapel: "SBdP", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Rabu", jam: "09.45 - 10.20", mapel: "SBdP", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Rabu", jam: "10.20 - 10.55", mapel: "Kebencanaan", guru: "Purnama Dewi S.Pd" },
+
+                    { hari: "Kamis", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Kamis", jam: "07.15 - 07.50", mapel: "Matematika", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Kamis", jam: "07.50 - 08.25", mapel: "Matematika", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Kamis", jam: "08.25 - 09.00", mapel: "Matematika", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Kamis", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "09.10 - 09.45", mapel: "Pend. Pancasila", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Kamis", jam: "09.45 - 10.20", mapel: "Pend. Pancasila", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Kamis", jam: "10.20 - 10.55", mapel: "Pend. Pancasila", guru: "Purnama Dewi S.Pd" },
+
+                    { hari: "Jum'at", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Jum'at", jam: "07.15 - 07.50", mapel: "PAIPB", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Jum'at", jam: "07.50 - 08.25", mapel: "PAIPB", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Jum'at", jam: "08.25 - 09.00", mapel: "PAIPB", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Jum'at", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "09.10 - 09.45", mapel: "PAIPB", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Jum'at", jam: "09.45 - 10.20", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "10.20 - 10.55", mapel: "", guru: "-" },
+
+                    { hari: "Sabtu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Sabtu", jam: "07.15 - 07.50", mapel: "PJOK", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Sabtu", jam: "07.50 - 08.25", mapel: "PJOK", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Sabtu", jam: "08.25 - 09.00", mapel: "PJOK", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Sabtu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "09.10 - 09.45", mapel: "PJOK", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Sabtu", jam: "09.45 - 10.20", mapel: "B. Jawa", guru: "Purnama Dewi S.Pd" },
+                    { hari: "Sabtu", jam: "10.20 - 10.55", mapel: "B. Jawa", guru: "Purnama Dewi S.Pd" },
+                ]
+            },
+            '2': {
+                waliKelas: "Fatimah S.Pd",
+                data: [
+                    { hari: "Senin", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Senin", jam: "07.15 - 07.50", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+                    { hari: "Senin", jam: "07.50 - 08.25", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+                    { hari: "Senin", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+                    { hari: "Senin", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "09.10 - 09.45", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+                    { hari: "Senin", jam: "09.45 - 10.20", mapel: "SBdP", guru: "Fatimah S.Pd" },
+                    { hari: "Senin", jam: "10.20 - 10.55", mapel: "SBdP", guru: "Fatimah S.Pd" },
+
+                    { hari: "Selasa", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Selasa", jam: "07.15 - 07.50", mapel: "Matematika", guru: "Fatimah S.Pd" },
+                    { hari: "Selasa", jam: "07.50 - 08.25", mapel: "Matematika", guru: "Fatimah S.Pd" },
+                    { hari: "Selasa", jam: "08.25 - 09.00", mapel: "Matematika", guru: "Fatimah S.Pd" },
+                    { hari: "Selasa", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "09.10 - 09.45", mapel: "Matematika", guru: "Fatimah S.Pd" },
+                    { hari: "Selasa", jam: "09.45 - 10.20", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+                    { hari: "Selasa", jam: "10.20 - 10.55", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+
+                    { hari: "Rabu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Rabu", jam: "07.15 - 07.50", mapel: "Pend. Pancasila", guru: "Fatimah S.Pd" },
+                    { hari: "Rabu", jam: "07.50 - 08.25", mapel: "Pend. Pancasila", guru: "Fatimah S.Pd" },
+                    { hari: "Rabu", jam: "08.25 - 09.00", mapel: "Pend. Pancasila", guru: "Fatimah S.Pd" },
+                    { hari: "Rabu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "09.10 - 09.45", mapel: "B. Jawa", guru: "Fatimah S.Pd" },
+                    { hari: "Rabu", jam: "09.45 - 10.20", mapel: "B. Jawa", guru: "Fatimah S.Pd" },
+                    { hari: "Rabu", jam: "10.20 - 10.55", mapel: "Kebencanaan", guru: "Fatimah S.Pd" },
+
+                    { hari: "Kamis", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Kamis", jam: "07.15 - 07.50", mapel: "PAIPB", guru: "Fatimah S.Pd" },
+                    { hari: "Kamis", jam: "07.50 - 08.25", mapel: "PAIPB", guru: "Fatimah S.Pd" },
+                    { hari: "Kamis", jam: "08.25 - 09.00", mapel: "PAIPB", guru: "Fatimah S.Pd" },
+                    { hari: "Kamis", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "09.10 - 09.45", mapel: "PAIPB", guru: "Fatimah S.Pd" },
+                    { hari: "Kamis", jam: "09.45 - 10.20", mapel: "Pend. Pancasila", guru: "Fatimah S.Pd" },
+                    { hari: "Kamis", jam: "10.20 - 10.55", mapel: "Pend. Pancasila", guru: "Fatimah S.Pd" },
+
+                    { hari: "Jum'at", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Jum'at", jam: "07.15 - 07.50", mapel: "PJOK", guru: "Fatimah S.Pd" },
+                    { hari: "Jum'at", jam: "07.50 - 08.25", mapel: "PJOK", guru: "Fatimah S.Pd" },
+                    { hari: "Jum'at", jam: "08.25 - 09.00", mapel: "PJOK", guru: "Fatimah S.Pd" },
+                    { hari: "Jum'at", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "09.10 - 09.45", mapel: "PJOK", guru: "Fatimah S.Pd" },
+                    { hari: "Jum'at", jam: "09.45 - 10.20", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+                    { hari: "Jum'at", jam: "10.20 - 10.55", mapel: "", guru: "-" },
+
+                    { hari: "Sabtu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Sabtu", jam: "07.15 - 07.50", mapel: "Matematika", guru: "Fatimah S.Pd" },
+                    { hari: "Sabtu", jam: "07.50 - 08.25", mapel: "Matematika", guru: "Fatimah S.Pd" },
+                    { hari: "Sabtu", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+                    { hari: "Sabtu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "09.10 - 09.45", mapel: "B. Indonesia", guru: "Fatimah S.Pd" },
+                    { hari: "Sabtu", jam: "09.45 - 10.20", mapel: "SBdP", guru: "Fatimah S.Pd" },
+                    { hari: "Sabtu", jam: "10.20 - 10.55", mapel: "SBdP", guru: "Fatimah S.Pd" },
+                ]
+            },
+            '3': {
+                waliKelas: "DIYAH ANGGRAINI RATNA SARI S.Pd",
+                data: [
+                    { hari: "Senin", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Senin", jam: "07.15 - 07.50", mapel: "Upacara", guru: "-" },
+                    { hari: "Senin", jam: "07.50 - 08.25", mapel: "Pend. Pancasila", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Senin", jam: "08.25 - 09.00", mapel: "Pend. Pancasila", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Senin", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "09.10 - 09.45", mapel: "B. Indonesia", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Senin", jam: "09.45 - 10.20", mapel: "B. Indonesia", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Senin", jam: "10.20 - 10.55", mapel: "B. Indonesia", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Senin", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "11.05 - 11.40", mapel: "B. Jawa", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Senin", jam: "11.40 - 12.15", mapel: "B. Jawa", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+
+                    { hari: "Selasa", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Selasa", jam: "07.15 - 07.50", mapel: "PJOK", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Selasa", jam: "07.50 - 08.25", mapel: "PJOK", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Selasa", jam: "08.25 - 09.00", mapel: "PJOK", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Selasa", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "09.10 - 09.45", mapel: "PJOK", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Selasa", jam: "09.45 - 10.20", mapel: "B.Inggris", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Selasa", jam: "10.20 - 10.55", mapel: "B.Inggris", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Selasa", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "11.05 - 11.40", mapel: "Matematika", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Selasa", jam: "11.40 - 12.15", mapel: "Matematika", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+
+                    { hari: "Rabu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Rabu", jam: "07.15 - 07.50", mapel: "PAIPB", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Rabu", jam: "07.50 - 08.25", mapel: "PAIPB", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Rabu", jam: "08.25 - 09.00", mapel: "PAIPB", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Rabu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "09.10 - 09.45", mapel: "PAIPB", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Rabu", jam: "09.45 - 10.20", mapel: "Pend. Pancasila", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Rabu", jam: "10.20 - 10.55", mapel: "Pend. Pancasila", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Rabu", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "11.05 - 11.40", mapel: "Pend. Pancasila", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Rabu", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+
+                    { hari: "Kamis", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Kamis", jam: "07.15 - 07.50", mapel: "Matematika", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Kamis", jam: "07.50 - 08.25", mapel: "Matematika", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Kamis", jam: "08.25 - 09.00", mapel: "Matematika", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Kamis", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "09.10 - 09.45", mapel: "IPAS", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Kamis", jam: "09.45 - 10.20", mapel: "IPAS", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Kamis", jam: "10.20 - 10.55", mapel: "IPAS", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Kamis", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "11.05 - 11.40", mapel: "IPAS", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Kamis", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+
+                    { hari: "Jum'at", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Jum'at", jam: "07.15 - 07.50", mapel: "B. Indonesia", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Jum'at", jam: "07.50 - 08.25", mapel: "B. Indonesia", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Jum'at", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Jum'at", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "09.10 - 09.45", mapel: "B. Indonesia", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Jum'at", jam: "09.45 - 10.20", mapel: "Matematika", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Jum'at", jam: "10.20 - 10.55", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "11.05 - 11.40", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+
+                    { hari: "Sabtu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Sabtu", jam: "07.15 - 07.50", mapel: "IPAS", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Sabtu", jam: "07.50 - 08.25", mapel: "IPAS", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Sabtu", jam: "08.25 - 09.00", mapel: "SBdP", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Sabtu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "09.10 - 09.45", mapel: "SBdP", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Sabtu", jam: "09.45 - 10.20", mapel: "SBdP", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Sabtu", jam: "10.20 - 10.55", mapel: "SBdP", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Sabtu", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "11.05 - 11.40", mapel: "Kebencanaan", guru: "DIYAH ANGGRAINI RATNA SARI S.Pd" },
+                    { hari: "Sabtu", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+                ]
+            },
+            '4': {
+                waliKelas: "SITI AISYAH S.Pd.",
+                data: [
+                    { hari: "Senin", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Senin", jam: "07.15 - 07.50", mapel: "Upacara", guru: "-" },
+                    { hari: "Senin", jam: "07.50 - 08.25", mapel: "B. Indonesia", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Senin", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Senin", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "09.10 - 09.45", mapel: "B. Indonesia", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Senin", jam: "09.45 - 10.20", mapel: "B. Indonesia", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Senin", jam: "10.20 - 10.55", mapel: "IPAS", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Senin", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "11.05 - 11.40", mapel: "", guru: "-" },
+                    { hari: "Senin", jam: "11.40 - 12.15", mapel: "IPAS", guru: "SITI AISYAH S.Pd." },
+
+                    { hari: "Selasa", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Selasa", jam: "07.15 - 07.50", mapel: "PAIPB", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Selasa", jam: "07.50 - 08.25", mapel: "PAIPB", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Selasa", jam: "08.25 - 09.00", mapel: "PAIPB", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Selasa", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "09.10 - 09.45", mapel: "PAIPB", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Selasa", jam: "09.45 - 10.20", mapel: "Pend. Pancasila", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Selasa", jam: "10.20 - 10.55", mapel: "Pend. Pancasila", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Selasa", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "11.05 - 11.40", mapel: "Pend. Pancasila", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Selasa", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+
+                    { hari: "Rabu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Rabu", jam: "07.15 - 07.50", mapel: "Matematika", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Rabu", jam: "07.50 - 08.25", mapel: "Matematika", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Rabu", jam: "08.25 - 09.00", mapel: "Matematika", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Rabu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "09.10 - 09.45", mapel: "SBdP", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Rabu", jam: "09.45 - 10.20", mapel: "SBdP", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Rabu", jam: "10.20 - 10.55", mapel: "SBdP", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Rabu", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "11.05 - 11.40", mapel: "SBdP", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Rabu", jam: "11.40 - 12.15", mapel: "Kebencanaan", guru: "SITI AISYAH S.Pd." },
+
+                    { hari: "Kamis", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Kamis", jam: "07.15 - 07.50", mapel: "PJOK", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Kamis", jam: "07.50 - 08.25", mapel: "PJOK", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Kamis", jam: "08.25 - 09.00", mapel: "PJOK", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Kamis", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "09.10 - 09.45", mapel: "PJOK", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Kamis", jam: "09.45 - 10.20", mapel: "B.Inggris", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Kamis", jam: "10.20 - 10.55", mapel: "B.Inggris", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Kamis", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "11.05 - 11.40", mapel: "Pend. Pancasila", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Kamis", jam: "11.40 - 12.15", mapel: "Pend. Pancasila", guru: "SITI AISYAH S.Pd." },
+
+                    { hari: "Jum'at", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Jum'at", jam: "07.15 - 07.50", mapel: "B. Indonesia", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Jum'at", jam: "07.50 - 08.25", mapel: "B. Indonesia", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Jum'at", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Jum'at", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "09.10 - 09.45", mapel: "B. Jawa", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Jum'at", jam: "09.45 - 10.20", mapel: "B. Jawa", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Jum'at", jam: "10.20 - 10.55", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "11.05 - 11.40", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+
+                    { hari: "Sabtu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Sabtu", jam: "07.15 - 07.50", mapel: "IPAS", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Sabtu", jam: "07.50 - 08.25", mapel: "IPAS", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Sabtu", jam: "08.25 - 09.00", mapel: "IPAS", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Sabtu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "09.10 - 09.45", mapel: "Matematika", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Sabtu", jam: "09.45 - 10.20", mapel: "Matematika", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Sabtu", jam: "10.20 - 10.55", mapel: "Matematika", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Sabtu", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "11.05 - 11.40", mapel: "Matematika", guru: "SITI AISYAH S.Pd." },
+                    { hari: "Sabtu", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+                ]
+            },
+            '5': {
+                waliKelas: "Rinda Rahmayanti S.Pd",
+                data: [
+                    { hari: "Senin", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Senin", jam: "07.15 - 07.50", mapel: "Upacara", guru: "-" },
+                    { hari: "Senin", jam: "07.50 - 08.25", mapel: "PAIPB", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Senin", jam: "08.25 - 09.00", mapel: "PAIPB", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Senin", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "09.10 - 09.45", mapel: "PAIPB", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Senin", jam: "09.45 - 10.20", mapel: "PAIPB", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Senin", jam: "10.20 - 10.55", mapel: "IPAS", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Senin", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "11.05 - 11.40", mapel: "IPAS", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Senin", jam: "11.40 - 12.15", mapel: "IPAS", guru: "Rinda Rahmayanti S.Pd" },
+
+                    { hari: "Selasa", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Selasa", jam: "07.15 - 07.50", mapel: "B. Indonesia", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Selasa", jam: "07.50 - 08.25", mapel: "B. Indonesia", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Selasa", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Selasa", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "09.10 - 09.45", mapel: "B. Indonesia", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Selasa", jam: "09.45 - 10.20", mapel: "Koding dan AI", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Selasa", jam: "10.20 - 10.55", mapel: "Koding dan AI", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Selasa", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "11.05 - 11.40", mapel: "Pend. Pancasila", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Selasa", jam: "11.40 - 12.15", mapel: "Pend. Pancasila", guru: "Rinda Rahmayanti S.Pd" },
+
+                    { hari: "Rabu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Rabu", jam: "07.15 - 07.50", mapel: "PJOK", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Rabu", jam: "07.50 - 08.25", mapel: "PJOK", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Rabu", jam: "08.25 - 09.00", mapel: "PJOK", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Rabu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "09.10 - 09.45", mapel: "PJOK", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Rabu", jam: "09.45 - 10.20", mapel: "B. Inggris", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Rabu", jam: "10.20 - 10.55", mapel: "B. Inggris", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Rabu", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "11.05 - 11.40", mapel: "Kebencanaan", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Rabu", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+
+                    { hari: "Kamis", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Kamis", jam: "07.15 - 07.50", mapel: "Matematika", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Kamis", jam: "07.50 - 08.25", mapel: "Matematika", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Kamis", jam: "08.25 - 09.00", mapel: "Matematika", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Kamis", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "09.10 - 09.45", mapel: "Matematika", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Kamis", jam: "09.45 - 10.20", mapel: "SBdP", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Kamis", jam: "10.20 - 10.55", mapel: "SBdP", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Kamis", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "11.05 - 11.40", mapel: "SBdP", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Kamis", jam: "11.40 - 12.15", mapel: "SBdP", guru: "Rinda Rahmayanti S.Pd" },
+
+                    { hari: "Jum'at", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Jum'at", jam: "07.15 - 07.50", mapel: "B. Indonesia", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Jum'at", jam: "07.50 - 08.25", mapel: "B. Indonesia", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Jum'at", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Jum'at", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "09.10 - 09.45", mapel: "B. Jawa", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Jum'at", jam: "09.45 - 10.20", mapel: "B. Jawa", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Jum'at", jam: "10.20 - 10.55", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "11.05 - 11.40", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+
+                    { hari: "Sabtu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Sabtu", jam: "07.15 - 07.50", mapel: "IPAS", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Sabtu", jam: "07.50 - 08.25", mapel: "IPAS", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Sabtu", jam: "08.25 - 09.00", mapel: "IPAS", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Sabtu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "09.10 - 09.45", mapel: "Matematika", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Sabtu", jam: "09.45 - 10.20", mapel: "Matematika", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Sabtu", jam: "10.20 - 10.55", mapel: "Pend. Pancasila", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Sabtu", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "11.05 - 11.40", mapel: "Pend. Pancasila", guru: "Rinda Rahmayanti S.Pd" },
+                    { hari: "Sabtu", jam: "11.40 - 12.15", mapel: "Pend. Pancasila", guru: "Rinda Rahmayanti S.Pd" },
+                ]
+            },
+            '6': {
+                waliKelas: "Ani Sifiyanti K, S.Pd.SD",
+                data: [
+                    { hari: "Senin", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Senin", jam: "07.15 - 07.50", mapel: "Upacara", guru: "-" },
+                    { hari: "Senin", jam: "07.50 - 08.25", mapel: "PJOK", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Senin", jam: "08.25 - 09.00", mapel: "PJOK", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Senin", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "09.10 - 09.45", mapel: "Bhs. Indonesia", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Senin", jam: "09.45 - 10.20", mapel: "PJOK", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Senin", jam: "10.20 - 10.55", mapel: "PJOK", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Senin", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Senin", jam: "11.05 - 11.40", mapel: "B.Inggris", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Senin", jam: "11.40 - 12.15", mapel: "B.Inggris", guru: "Ani Sifiyanti K, S.Pd.SD" },
+
+                    { hari: "Selasa", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Selasa", jam: "07.15 - 07.50", mapel: "Matematika", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Selasa", jam: "07.50 - 08.25", mapel: "Matematika", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Selasa", jam: "08.25 - 09.00", mapel: "Matematika", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Selasa", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "09.10 - 09.45", mapel: "Matematika", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Selasa", jam: "09.45 - 10.20", mapel: "SBdP", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Selasa", jam: "10.20 - 10.55", mapel: "SBdP", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Selasa", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Selasa", jam: "11.05 - 11.40", mapel: "SBdP", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Selasa", jam: "11.40 - 12.15", mapel: "SBdP", guru: "Ani Sifiyanti K, S.Pd.SD" },
+
+                    { hari: "Rabu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Rabu", jam: "07.15 - 07.50", mapel: "B. Indonesia", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Rabu", jam: "07.50 - 08.25", mapel: "B. Indonesia", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Rabu", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Rabu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "09.10 - 09.45", mapel: "B. Indonesia", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Rabu", jam: "09.45 - 10.20", mapel: "Koding dan AI", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Rabu", jam: "10.20 - 10.55", mapel: "Koding dan AI", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Rabu", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Rabu", jam: "11.05 - 11.40", mapel: "Pend. Pancasila", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Rabu", jam: "11.40 - 12.15", mapel: "Pend. Pancasila", guru: "Ani Sifiyanti K, S.Pd.SD" },
+
+                    { hari: "Kamis", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Kamis", jam: "07.15 - 07.50", mapel: "IPAS", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Kamis", jam: "07.50 - 08.25", mapel: "IPAS", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Kamis", jam: "08.25 - 09.00", mapel: "IPAS", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Kamis", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "09.10 - 09.45", mapel: "Matematika", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Kamis", jam: "09.45 - 10.20", mapel: "Matematika", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Kamis", jam: "10.20 - 10.55", mapel: "Pend. Pancasila", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Kamis", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Kamis", jam: "11.05 - 11.40", mapel: "Pend. Pancasila", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Kamis", jam: "11.40 - 12.15", mapel: "Pend. Pancasila", guru: "Ani Sifiyanti K, S.Pd.SD" },
+
+                    { hari: "Jum'at", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Jum'at", jam: "07.15 - 07.50", mapel: "B. Indonesia", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Jum'at", jam: "07.50 - 08.25", mapel: "B. Indonesia", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Jum'at", jam: "08.25 - 09.00", mapel: "B. Indonesia", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Jum'at", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "09.10 - 09.45", mapel: "B. Jawa", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Jum'at", jam: "09.45 - 10.20", mapel: "B. Jawa", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Jum'at", jam: "10.20 - 10.55", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Jum'at", jam: "11.05 - 11.40", mapel: "", guru: "-" },
+                    { hari: "Jum'at", jam: "11.40 - 12.15", mapel: "", guru: "-" },
+
+                    { hari: "Sabtu", jam: "06.30 - 07.15", mapel: "BTQ Pagi", guru: "-" },
+                    { hari: "Sabtu", jam: "07.15 - 07.50", mapel: "PAIPB", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Sabtu", jam: "07.50 - 08.25", mapel: "PAIPB", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Sabtu", jam: "08.25 - 09.00", mapel: "PAIPB", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Sabtu", jam: "09.00 - 09.10", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "09.10 - 09.45", mapel: "PAIPB", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Sabtu", jam: "09.45 - 10.20", mapel: "IPAS", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Sabtu", jam: "10.20 - 10.55", mapel: "IPAS", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Sabtu", jam: "10.55 - 11.05", mapel: "Istirahat", guru: "-" },
+                    { hari: "Sabtu", jam: "11.05 - 11.40", mapel: "IPAS", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                    { hari: "Sabtu", jam: "11.40 - 12.15", mapel: "IPAS", guru: "Ani Sifiyanti K, S.Pd.SD" },
+                ]
+            }
+        };
+
+        const classButtons = document.querySelectorAll('.class-button');
+        const scheduleDisplay = document.getElementById('scheduleDisplay');
+        const scheduleTitle = document.getElementById('scheduleTitle');
+        const waliKelasInfo = document.getElementById('waliKelasInfo');
+        const scheduleTableContainer = document.getElementById('scheduleTableContainer');
+        const printButton = document.getElementById('printButton');
+
+        function generateScheduleTable(data) {
+            let tableHTML = '<table class="schedule-table"><thead><tr><th>Hari</th><th>Jam</th><th>Mata Pelajaran</th><th>Guru Pengajar</th></tr></thead><tbody>';
+            
+            // Group by Day
+            const groupedByDay = data.reduce((acc, item) => {
+                (acc[item.hari] = acc[item.hari] || []).push(item);
+                return acc;
+            }, {});
+
+            const daysOrder = ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"]; // Added Saturday
+
+            daysOrder.forEach(day => {
+                if (groupedByDay[day]) {
+                    groupedByDay[day].forEach((item, index) => {
+                        tableHTML += `<tr>`;
+                        if (index === 0) { // Hanya tampilkan nama hari di baris pertama
+                            tableHTML += `<td rowspan="${groupedByDay[day].length}">${item.hari}</td>`;
+                        }
+                        tableHTML += `
+                            <td>${item.jam}</td>
+                            <td>${item.mapel}</td>
+                            <td>${item.guru === "" ? "-" : item.guru}</td>
+                        </tr>`;
+                    });
+                }
+            });
+
+            tableHTML += '</tbody></table>';
+            return tableHTML;
+        }
+
+        classButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const kelas = this.dataset.kelas;
+                const scheduleInfo = schedules[kelas]; 
+
+                if (scheduleInfo && scheduleInfo.data) {
+                    scheduleTitle.textContent = `Jadwal Pelajaran Kelas ${kelas}`;
+                    waliKelasInfo.textContent = `Wali Kelas: ${scheduleInfo.waliKelas}`;
+                    scheduleTableContainer.innerHTML = generateScheduleTable(scheduleInfo.data);
+                    scheduleDisplay.style.display = 'block'; 
+                    scheduleDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } else {
+                    scheduleTitle.textContent = `Jadwal Pelajaran Kelas ${kelas}`;
+                    waliKelasInfo.textContent = `Wali Kelas: ${scheduleInfo ? scheduleInfo.waliKelas : 'N/A'}`;
+                    scheduleTableContainer.innerHTML = '<p>Jadwal belum tersedia untuk kelas ini. Mohon lengkapi data jadwal.</p>';
+                    scheduleDisplay.style.display = 'block';
+                    scheduleDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        printButton.addEventListener('click', function() {
+            window.print();
+        });
+
+        // Tampilkan jadwal kelas 1 secara default saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            const defaultKelas = '1';
+            const scheduleInfo = schedules[defaultKelas];
+            if (scheduleInfo && scheduleInfo.data) {
+                scheduleTitle.textContent = `Jadwal Pelajaran Kelas ${defaultKelas}`;
+                waliKelasInfo.textContent = `Wali Kelas: ${scheduleInfo.waliKelas}`;
+                scheduleTableContainer.innerHTML = generateScheduleTable(scheduleInfo.data);
+                scheduleDisplay.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
